@@ -1,0 +1,239 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+
+
+<nav class="navbar navbar-expand-sm bg-body-tertiary py-0 navbar-light bg-dark">
+
+
+
+    <div class="container-fluid">
+     <a class="navbar-brand" href="{% url 'home' %}">
+         <img src="{% static '/images/omni_logo_main.jpg' %}" alt="Omni Logo" class="logo"></a>
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" data-bs-theme="dark">
+
+
+<!--03/12/2024: remove "not" from below when ready to deploy-->
+
+{% if user.is_authenticated and user.username == 'lifeline' %}
+        <li class="nav-item">
+            <a class="nav-link single-link" href='{% url 'process_lifeline_response' %}'>Lifeline Response Form</a>
+         </li>
+{% endif %}
+
+{% if user.is_authenticated and user.username == 'lifeline2' %}
+        <li class="nav-item">
+            <a class="nav-link single-link" href='{% url 'process_lifeline_response2' %}'>Lifeline Response Form 2</a>
+         </li>
+{% endif %}
+
+{% if user.is_authenticated and user.username == 'lifeline2' or user.username == 'lifeline'%}
+        <li class="nav-item">
+            <a class="nav-link single-link" href='{% url 'lifelines_for_followup' %}'>Lifeline Followup Form</a>
+         </li>
+        <li class="nav-item">
+            <a class="nav-link single-link" href='{% url 'lifelines_to_callback' %}'>Lifeline Callback Patients</a>
+         </li>
+
+{% endif %}
+
+
+{% if user.is_authenticated and user.username != 'lifeline' and user.username != 'lifeline2' %}
+      <!--<li class="nav-item dropdown">-->
+      <!--    <a class="nav-link dropdown-toggle target-name" role="button"  id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-expanded="false">-->
+      <!--      Vendors-->
+      <!--    </a>-->
+      <!--    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">-->
+      <!--      <li><a class="dropdown-item" href="{% url 'all-vendors' %}">List of All Vendors</a></li>-->
+
+      <!--      <li><a class="dropdown-item" href="{% url 'add_vendor' %}">Add New Vendor</a></li>-->
+      <!--    </ul>-->
+      <!--  </li>-->
+
+        <li class="nav-item">
+            <a class="nav-link single-link " role="button" href="{% url 'all-vendors' %}">Vendors</a>
+         </li>
+
+
+        <li class="nav-item dropdown">
+          <button class="nav-link single-link " type="button"  id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            Products
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" href="{% url 'all-products' %}">List of All Products</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'all-products-used' %}">List of Products with Quantity = 0</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'all-products-expired-stocked' %}">List of Products Expired & In Stock</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'add_product' %}">Add New Product</a></li>
+
+
+          </ul>
+        </li>
+
+
+
+       <li class="nav-item dropdown">
+          <button class="nav-link single-link " type="button" style="width: 70px;"  id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-expanded="false">
+            POs
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+            <li><a class="dropdown-item" href="{% url 'all-purchase-orders' %}">List of All Purchase Orders</a>
+            <!--<hr class="dropdown-divider"></li>-->
+
+            <li><a class="dropdown-item" href="{% url 'create_po' %}">Create Purchase Order</a></li>
+          </ul>
+        </li>
+
+
+
+       <li class="nav-item dropdown">
+          <button class="nav-link single-link " role="button"  id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+            Procedures
+          </button>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+            <li><a class="dropdown-item" href="{% url 'all-procedures' %}">List of All Procedures Performed</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'procedure' %}">Add New Procedure (Items Used)</a></li>
+          </ul>
+        </li>
+
+
+        <li class="nav-item dropdown">
+
+            <button class="nav-link single-link " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Reports
+  </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+<li><a class="dropdown-item" href="{% url 'lifelines_report_general' %}">LifeLine Screening - Overall Report</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'expiry_check_custom' %}">Products Expiring within Custom Date Range</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'report_items_added_30days' %}">New Products Added Within past 30 Days</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'report_items_used_30days' %}">Products Used Within past 30 Days</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'expiry_check_products_by_month' month_number=1 %}">Products Expiring within 1 month</a></li>
+<li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'expiry_check_products_by_month' month_number=3 %}">Products Expiring within 1 to 3 months</a></li>
+
+            <!--<li><a class="dropdown-item" href="#">Procedures grouped by MRN?</a></li>-->
+            <!--<li><a class="dropdown-item" href="#">Procedures grouped by date period?</a></li>-->
+          </ul>
+        </li>
+{% if user.is_authenticated and user.username == 'admin' %}
+<li class="nav-item dropdown">
+    <button class="nav-link single-link " type="button" id="dropdownMenuButtonAdmin" data-bs-toggle="dropdown" aria-expanded="false">
+        Admin
+    </button>
+    <ul class="dropdown-menu " aria-labelledby="dropdownMenuButtonAdmin">
+        <li><a class="dropdown-item" href='https://omnivascular.pythonanywhere.com/admin/' target="_blank" rel="noopener noreferrer">Django Admin Site</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{% url 'users:register_user' %}"><b>Register a New User</b></a></li>
+        <!--<li><hr class="dropdown-divider"></li>-->
+
+        <li><a class="dropdown-item" href='{% url 'process_lifeline_response' %}'>Lifeline Response Form 1</a></li>
+        <li><a class="dropdown-item" href='{% url 'process_lifeline_response2' %}'>Lifeline Response Form 2</a></li>
+        <li><a class="dropdown-item" href='{% url 'update-inventory' %}'>Update Inventory from Sheets</a></li>
+        <!--<li><hr class="dropdown-divider"></li>-->
+        <li><a class="dropdown-item" href='{% url 'update-procedures' %}'>Update Procedures from Sheets</a></li>
+        <!--<li><hr class="dropdown-divider"></li>-->
+        <!--<li><a class="dropdown-item" href='{% url 'update-purchaseorders' %}'>Update Purchase Orders from Sheets</a></li>-->
+        <!--<li><a class="dropdown-item" href='{% url 'gui-test' %}'>Test Tkinter GUI</a></li>-->
+
+    </ul>
+</li>
+{% endif %}
+{% endif %}
+{% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link single-link  logout" href="{% url 'users:logout' %}">Logout</a>
+          </li>
+{% else %}
+
+          <li class="nav-item">
+            <a class="nav-link single-link " href="{% url 'users:login' %}">Login</a>
+          </li>
+{% endif %}
+        </ul>
+        {% if user.is_authenticated and user.username != 'lifeline' and user.username != 'lifeline2' %}
+
+
+
+
+
+<div class="search-container">
+  <form method="POST" action="{% url 'product_search' %}" class="d-flex" style="display: inline;" role="search">
+    {% csrf_token %}
+    <input class="form-control me-5 mt-1" style="width: auto; height: 30px;" type="search" autofocus placeholder="Enter search term(s)" aria-label="Search" name="searched">
+
+    <!--<div class="form-check form-check-inline">-->
+    <!--  <input class="form-check-input" type="radio" name="search_option" id="search_option_single" value="single">-->
+    <!--  <label class="form-check-label" for="search_option_single">Single Product</label>-->
+    <!--</div>-->
+
+
+    <div class="radio-stack" style="display: inline;" hidden>
+    <div class="form-check layer1">
+  <input class="form-check-input" type="radio" name="search_option" id="search_option_barcode" checked>
+  <label class="form-check-label" for="search_option_barcode">
+    Find Single
+  </label>
+</div>
+<div class="form-check layer2">
+  <input class="form-check-input" type="radio" name="search_option" id="search_option_multiple">
+  <label class="form-check-label" for="search_option_multiple">
+    Find Multiple
+  </label>
+  </div>
+</div>
+
+
+
+    <button class="btn btn-outline-dark" type="submit">Search</button>
+  </form>
+</div>
+
+        {% endif %}
+      </div>
+    </div>
+<script>
+    // Function to find the closest button with an ID starting with 'dropdownMenuButton'
+    function findCorrespondingButton(element) {
+        let parent = element.parentElement;
+        while (parent) {
+            if (parent.tagName === 'LI' && parent.querySelector('button[id^="dropdownMenuButton"]')) {
+                return parent.querySelector('button[id^="dropdownMenuButton"]');
+            }
+            parent = parent.parentElement;
+        }
+        return null;
+    }
+
+    // Add event listeners to all dropdown items
+    document.querySelectorAll('.dropdown-menu').forEach(item => {
+        item.addEventListener('mouseover', () => {
+            const correspondingButton = findCorrespondingButton(item);
+            if (correspondingButton) {
+                correspondingButton.classList.add('highlighted');
+            }
+        });
+
+        item.addEventListener('mouseout', () => {
+            const correspondingButton = findCorrespondingButton(item);
+            if (correspondingButton) {
+                correspondingButton.classList.remove('highlighted');
+            }
+        });
+    });
+</script>
+
+  </nav>
+

@@ -1,0 +1,148 @@
+{% load custom_filters %}
+{% load static %}
+{% load tz %}
+
+{% timezone "US/Eastern" %}
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Omni Vascular Inventory</title>
+      <link rel="shortcut icon" type="image/png" href="{% static 'images/omni_favicon.png' %}" >
+
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js" integrity="sha512-is1ls2rgwpFZyixqKFEExPHVUUL+pPkBEPw47s/6NDQ4n1m6T/ySeDW3p54jp45z2EJ0RSOgilqee1WhtelXfA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="{% static 'script.js' %}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <link rel="stylesheet" href="{% static 'pydb4/styles.css' %}">
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+  console.log("DOM fully loaded and parsed");
+  n = document.getElementById('notes');
+  const obj = JSON.parse(n.value);
+  console.log(obj);
+//   for (let i = 0; i <= obj.length; i++) {
+//       obj.shift();
+//   }
+});
+</script>
+      <script>
+         function goBack() {
+             window.history.back();
+         }
+      </script>
+      <script>
+         function redirectToPage(url) {
+             window.location.href = url;
+         }
+      </script>
+      <script>
+         // JavaScript code
+         function openModal(vendorId) {
+             // Create a new AJAX request
+             console.log('this is vendor id being passed:', vendorId)
+             var xhr = new XMLHttpRequest();
+
+             // Set up the request
+             xhr.open('GET', '/vendors/' + vendorId + '/', true);
+             xhr.setRequestHeader('Content-Type', 'application/json');
+             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+             // Define the callback function
+             xhr.onload = function() {
+                 if (xhr.status === 200) {
+                     var response = JSON.parse(xhr.responseText);
+                     var vendor = response.vendor;
+                     var products = response.products;
+
+                     // Update the modal content with the retrieved data
+                     var vendorNameElement = document.getElementById('vendorName');
+                     vendorNameElement.textContent = vendor.name;
+
+                     var vendorProductsElement = document.getElementById('vendorProducts');
+                     vendorProductsElement.innerHTML = '';
+
+                     products.forEach(function(product) {
+                         var listItem = document.createElement('li');
+                         listItem.textContent = product.name;
+                         vendorProductsElement.appendChild(listItem);
+                     });
+
+                     // Open the modal
+                     var modal = document.getElementById('vendorModal');
+                     modal.style.display = 'block';
+                 } else {
+                     alert('Error occurred while fetching vendor data.');
+                 }
+             };
+
+             // Send the request
+             xhr.send();
+         }
+
+      </script>
+      <script>
+         document.addEventListener('DOMContentLoaded', function() {
+           // Code to run when the DOM is ready
+
+           // Find the close button
+           var closeButton = document.getElementById('closeButton');
+
+           if (closeButton){  // Add event listener to the close button
+           closeButton.addEventListener('click', function() {
+             var modal = document.getElementById('vendorModal');
+             modal.style.display = 'none';
+           });
+         }
+
+           // Any other code you want to run when the DOM is ready
+         });
+      </script>
+      <script type="text/javascript">
+         const closeButton = document.getElementById('closeButton');
+             // Add a scroll event listener to the window
+         window.addEventListener('scroll', function() {
+         // Get the current scroll position
+         var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+         // Calculate the top position for the close button
+         var topPosition = 10 + scrollPosition + 'px';
+
+         // Set the top position of the close button
+         closeButton.style.top = topPosition;
+         });
+
+      </script>
+      <style>
+         body {background: #f4f4f4;}
+      </style>
+   </head>
+   <body>
+<div id="page-container">
+<div id="content-wrap">
+      {% include 'pydb4/navbar.html' %}
+      {% include 'pydb4/messages.html' %}
+      <br/>
+      <div class="container" style="overflow: auto;">
+         {% block content %}
+         {% if messages %}
+         <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="whiten {{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+         </ul>
+         {% endif %}
+         {% endblock %}
+      </div>
+</div>
+<footer id="footer" class="whiten" style="text-align: center; margin-bottom: 13px;">
+You are visiting at {% now "h:i:s A \o\n l, F jS, Y" %} <br>
+Inventory & IT Resources Version &Delta;3
+</footer>
+</div>
+   </body>
+</html>
+{% endtimezone %}

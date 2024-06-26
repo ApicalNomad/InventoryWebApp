@@ -1,0 +1,114 @@
+
+{% extends 'pydb4/base.html' %}
+{% load static %}
+{% load tz %}
+
+
+{% block content %}
+
+<label hidden>
+<p>Product.employee.id: {{product.employee.id}}</p>
+</label>
+
+{% if submitted %}
+  <center class="whiten">Your Product was added successfully!</center>
+{% endif %}
+
+{% if request.GET.redirect_flag == "true" %}
+  <center class="whiten">Your Product was updated successfully!</center>
+{% endif %}
+
+
+
+<button class="btn btn-outline-warning float-end" onclick="{% if '/product_search/' in request.META.HTTP_REFERER %}javascript:history.go(-1);{% else %}redirectToPage('{% url 'all-products' %}'){% endif %}">{% if '/product_search/' in request.META.HTTP_REFERER %}Return to Search Results{% else %}Return to All Products{% endif %}</button>
+{% timezone "US/Eastern" %}
+<h2 class="whiten">{{ product.name }}</h2>
+<br>
+<div class="test"></div>
+<div class="product card">
+<ul>
+  <li><span class="bolden">Size</span>: {{ product.size }}</li>
+  <li><span class="bolden">Reference ID</span>: {{product.reference_id}}</li>
+  <li><span class="bolden">Lot number</span>: {{product.lot_number}}</li>
+  <li><span class="bolden">Expiration Date</span>: {{product.expiry_date.date}}</li>
+  <li><span class="bolden">Quantity on hand</span>: {{product.quantity_on_hand}}</li>
+  <li><span class="bolden">Item is Purchased</span>: <code>{{product.is_purchased}}</code></li>
+  {% if product.date_added %}
+  <li><span class="bolden">Date Added</span>: {{product.date_added|date:"D M d Y"}} at {{ product.date_added|time:"H:i a e" }}</li>
+  {% endif %}
+  {% if product.notes %}
+    <li><span class="bolden">Notes</span>:</li>
+    <ul>
+    {{product.notes}}
+    </ul>
+  {% endif %}
+  <!--{% if product.is_purchased %}-->
+  <!--<li>Item Status: Purchased</li>-->
+  <!--{% else %}-->
+  <!--<li>Item Status: Consignment</li>-->
+  <!--{% endif %}-->
+  {% if user.is_authenticated %}
+  <div class="background-qr">
+  <li><span class="bolden">Data encoded in QR Code</span>:
+      <div id="qrcode-2">{{product.name}}-{{product.barcode}}-{{product.expiry_date.date|date:"M. j, Y"}}-{{product.lot_number}}</div>
+<script type="text/javascript">
+var barcodeData = '{{product.name}}-{{product.barcode}}-{{product.expiry_date.date|date:"M. j, Y"}}-{{product.lot_number}}'; // Ensure product.barcode is formatted as a string
+var qrcode = new QRCode(document.getElementById("qrcode-2"), {
+    text: barcodeData, // Pass the barcodeData variable
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+});
+</script>
+</li>
+</div>
+  {% endif %}
+    <li><span class="bolden">Last modified</span>: {{product.last_modified}}</li>
+
+  {% if records %}
+  <button id="history" class="hist tested next"><span class="bolden">History of Changes</span>:</button>
+<div id="modTable">
+  <table>
+<thead>
+    <tr>
+        <th style="border: 1px solid #333;">Date</th>
+        <th style="border: 1px solid #333;">Field Changed</th>
+        <th style="border: 1px solid #333;">Old Value</th>
+        <th style="border: 1px solid #333;">New Value</th>
+    </tr>
+</thead>
+<tbody>
+
+    {% for r in records %}
+        <tr>
+            <td style="border: 1px solid #333; width: 250px;">{{r.3|date:"D M d Y"}} at {{ r.3|time:"H:i a e" }}</td>
+            <td style="border: 1px solid #333;">{{ r.0 }}</td>
+            <td style="border: 1px solid #333;">{{ r.1 }}</td>
+            <td style="border: 1px solid #333;">{{ r.2 }}</td>
+        </tr>
+    <!-- <hr style="border: 1px dashed black" /> -->
+    {% endfor %}
+</ul>
+</tbody>
+</table>
+</div>
+{% endif %}
+
+<br>
+<button class="btn btn-outline-primary btn-sm" onclick="redirectToPage('{% url 'update_product' product_id=product.id %}')" style="margin-top: 10px;">Update Product</button>
+</div>
+<br>
+
+<script src="{% static 'pydb4/script.js' %}"></script>
+
+{% endtimezone %}
+
+
+{% endblock %}
+
+
+  <!--<li>-->
+  <!--  <a class="whiten"href="{% url 'update_product' product_id=product.id %}" >Update product</a>-->
+  <!--</li>-->
