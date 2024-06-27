@@ -36,31 +36,6 @@ timezone.localtime() = datetime.datetime(2023, 12, 7, 11, 59, 23, 512790, tzinfo
 """
 
 
-"""
-10/04/2023:
-while changing sheets in API, these things will be different:
-
-old secret_file = client_secret.json
-new secret_file = client_secret_omni_z.json
-
-old spreadsheet_ID of copy of items_added =
-1Z5khxBtj8BcmWS2AXlZrIXtJVXMG5fJ8OUs8qQFPXP8
-old sheet name = "Sheet1"
-
-new spreadsheet_ID of main items new (items added) =
-1HwJeDoho1MHS3NJxLdJZgse7YP3A-6C1KIw8YzSX9Eo
-new sheet name = "New Items for Inventory FORM"
-
-new spreadsheet_ID of main items used =
-1HwJeDoho1MHS3NJxLdJZgse7YP3A-6C1KIw8YzSX9Eo
-new sheet name = "Items Used in Procedure FORM"
-
-new spreadsheet_ID of main current inventory (OmniZ) =
-1HwJeDoho1MHS3NJxLdJZgse7YP3A-6C1KIw8YzSX9Eo
-new sheet name = "Current Inventory"
-
-"""
-
 
 def recompose_date(
     phrase: str, delim: str = "", db_format: bool = True, return_str: bool = True
@@ -256,10 +231,10 @@ def add_product_to_sheets(
     """
     # 11/02/2023: need to add functionality, to check for uniqueness vs items already in sheets,
     # one way: download data in pandas dataframe, then find + sort.
-    SPREADSHEET_ID = "1HwJeDoho1MHS3NJxLdJZgse7YP3A-6C1KIw8YzSX9Eo"  # spreadsheet_id of main Current Inventory
+    SPREADSHEET_ID = "_blank_"  # spreadsheet_id of main Current Inventory
     RANGE_NAME = "Current Inventory"
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-    secret_file = os.path.join(os.getcwd(), "client_secret_omni_z.json")
+    secret_file = os.path.join(os.getcwd(), "client_secret.json")
     creds = service_account.Credentials.from_service_account_file(
         secret_file, scopes=SCOPES
     )
@@ -294,7 +269,7 @@ def add_product_to_sheets(
 def update_product_in_sheets(
     new_quantity: int, ref_id: str, lot_number: str, expiry_date
 ) -> None:
-    SPREADSHEET_ID = "1HwJeDoho1MHS3NJxLdJZgse7YP3A-6C1KIw8YzSX9Eo"  # spreadsheet_id of main Current Inventory
+    SPREADSHEET_ID = ""  # spreadsheet_id of main Current Inventory
     RANGE_NAME = "Current Inventory"
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
     secret_file = os.path.join(os.getcwd(), "client_secret_omni_z.json")
@@ -387,7 +362,7 @@ def po_data_from_api(params: list) -> pd.DataFrame:
     (above returns a Series object, centered on where Vendor matches 'Boston Scientific')
     """
     with thread_lock:
-        SPREADSHEET_ID_MAIN = "15HDU1RAOBYa5InSzReHRiohlabBzk-CPyyhMsD9Li3s"
+        SPREADSHEET_ID_MAIN = ""
         # RANGE_NAME_ITEMS_ADDED = "New Items for Inventory FORM"
         # RANGE_NAME_ITEMS_USED = "Items Used in Procedure FORM"
         # RANGE_NAME_MAIN_INVENTORY = "Current Inventory"
