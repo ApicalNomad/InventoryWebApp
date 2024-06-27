@@ -308,7 +308,7 @@ def generate_po_pdf(request, po_id):
 
     # Sender's email credentials
     sender_email = "omni.vascular.overflow@gmail.com"
-    sender_password = "uhjubjzvjawytfnm"
+    sender_password = "___"
 
     # # Recipients' email addresses
     # recipients = [
